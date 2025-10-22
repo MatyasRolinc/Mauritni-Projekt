@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c43bef58c2a0b684ba6ab68fa87238c5
+guid: 1b87689a2f0be7c4c822b162e116dcbd
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6778922828098697452
-    second: tiger1_0
+      213: 5958040578228078691
+    second: "pozad\xED_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tiger1_0
+      name: "pozad\xED_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 695
-        height: 264
-      alignment: 9
-      pivot: {x: 0.76162785, y: 0.49149686}
+        width: 1536
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4170467aa9d6ce1a0800000000000000
-      internalID: -6778922828098697452
+      spriteID: 368c5aeb6563fa250800000000000000
+      internalID: 5958040578228078691
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 44b1e114f1996144a9baf5dfe51f2eed
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      tiger1_0: -6778922828098697452
+      "pozad\xED_0": 5958040578228078691
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
