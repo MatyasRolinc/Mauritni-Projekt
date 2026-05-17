@@ -45,19 +45,33 @@ public class PlayerStats : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "MainMenu")
-    {
-        Destroy(gameObject);
-    }
-    else {
-        health = maxHealth;
-        GameObject hbObj = GameObject.Find("HealthBarFill");
-        if (hbObj != null) healthBar = hbObj.GetComponent<RectTransform>();
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            health = maxHealth;
+            GameObject hbObj = GameObject.Find("HealthBarFill");
+            if (hbObj != null) healthBar = hbObj.GetComponent<RectTransform>();
 
-        GameObject mTextObj = GameObject.Find("MoneyField");
-        if (mTextObj != null) moneyText = mTextObj.GetComponent<TextMeshProUGUI>();
-        UpdateUI();
-    }
-        
+            // Hledat MoneyField pouze v aktuálně načtené scéně, ne v DontDestroyOnLoad
+            moneyText = null;
+            var activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            foreach (var root in activeScene.GetRootGameObjects())
+            {
+                var found = root.GetComponentsInChildren<TextMeshProUGUI>(true);
+                foreach (var tmp in found)
+                {
+                    if (tmp.gameObject.name == "MoneyField")
+                    {
+                        moneyText = tmp;
+                        break;
+                    }
+                }
+                if (moneyText != null) break;
+            }
+            UpdateUI();
+        }
     }
 
     void Start()
@@ -73,6 +87,7 @@ public class PlayerStats : MonoBehaviour
             UpdateUI();
             return true;
         }
+        Debug.LogWarning($"<color=orange>SpendMoney SELHALO: máš {money} ale potřebuješ {cost}</color>");
         return false;
     }
 
@@ -90,37 +105,56 @@ public class PlayerStats : MonoBehaviour
 
     public void UpgradeMaxHealth(int cost)
     {
+        Debug.Log($"UpgradeMaxHealth: money={money}, cost={cost}");
         if (SpendMoney(cost))
         {
             maxHealth += 1;
-            health = maxHealth; 
+            health = maxHealth;
+            Debug.Log($"<color=green>Health upgradováno na {maxHealth}</color>");
             UpdateUI();
         }
     }
 
     public void UpgradeMoveSpeed(int cost)
     {
+        Debug.Log($"UpgradeMoveSpeed: money={money}, cost={cost}");
         if (SpendMoney(cost))
         {
             moveSpeed += 0.5f;
+            Debug.Log($"<color=green>Speed upgradováno na {moveSpeed}</color>");
             UpdateUI();
         }
     }
 
     public void UpgradeReloadTime(int cost)
     {
+        Debug.Log($"UpgradeReloadTime: money={money}, cost={cost}");
         if (SpendMoney(cost))
         {
             reloadTime -= 0.05f;
+            Debug.Log($"<color=green>Reload upgradováno na {reloadTime}</color>");
+            UpdateUI();
+        }
+    }
+
+    public void UpgradeShellSpeed(int cost)
+    {
+        Debug.Log($"UpgradeShellSpeed: money={money}, cost={cost}");
+        if (SpendMoney(cost))
+        {
+            shellSpeed += 1.0f;
+            Debug.Log($"<color=green>ShellSpeed upgradováno na {shellSpeed}</color>");
             UpdateUI();
         }
     }
 
     public void UpgradeDamage(int cost)
     {
+        Debug.Log($"UpgradeDamage: money={money}, cost={cost}");
         if (SpendMoney(cost))
         {
             damage += 0.5f;
+            Debug.Log($"<color=green>Damage upgradováno na {damage}</color>");
             UpdateUI();
         }
     }
@@ -131,7 +165,7 @@ public class PlayerStats : MonoBehaviour
         UpdateUI();
         if (health <= 0)
         {
-           if (LevelManager.Instance != null) LevelManager.Instance.Die();
+            if (LevelManager.Instance != null) LevelManager.Instance.Die();
         }
     }
 
@@ -150,6 +184,4 @@ public class PlayerStats : MonoBehaviour
         if (moneyText != null)
             moneyText.text = money.ToString();
     }
-
-   
 }

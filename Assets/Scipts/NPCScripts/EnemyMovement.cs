@@ -8,108 +8,98 @@ public class EnemyMovement : MonoBehaviour
     public float stopDuration = 0.5f;
     public float rotationSpeed = 180f;
     public float health = 3f;
-    
+
     public HealthBarController healthBar;
     public Animator[] allTrackAnimators;
 
     private float maxHealth;
-
     public float obstacleCheckDistance = 2f;
     public LayerMask obstacleMask;
 
     private Rigidbody2D rb;
     private float timer;
     private bool isMoving = true;
+    private bool wasMoving = false;
     private float targetAngle;
+
+    private AudioSource tracksAudio;
+    private const float TRACKS_START = 3f;
+    private const float TRACKS_END   = 8f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
         rb.freezeRotation = true;
-
         maxHealth = health;
 
         if (allTrackAnimators == null || allTrackAnimators.Length == 0)
-        {
             allTrackAnimators = GetComponentsInChildren<Animator>();
-        }
-
         if (healthBar == null)
-        {
             healthBar = GetComponentInChildren<HealthBarController>();
-        }
         if (healthBar != null)
-        {
             healthBar.SetHealth(health, maxHealth);
-        }
-
-        PickNewDirection();
 
         
+        tracksAudio = gameObject.AddComponent<AudioSource>();
+        tracksAudio.loop = false;
+        tracksAudio.playOnAwake = false;
+        tracksAudio.volume = 0.5f;
+        if (TankAudioManager.Instance != null)
+            tracksAudio.clip = TankAudioManager.Instance.tracksRollingClip;
+
+        PickNewDirection();
     }
 
     void Update()
     {
         timer += Time.deltaTime;
-
         if (isMoving)
         {
-            if (IsObstacleAhead())
-            {
-                StopAndTurn();
-            }
-
-            if (timer >= moveDuration)
-            {
-                StopAndTurn();
-            }
+            if (IsObstacleAhead()) StopAndTurn();
+            if (timer >= moveDuration) StopAndTurn();
         }
         else
         {
             if (timer >= stopDuration)
             {
                 PickNewDirection();
+                if (IsObstacleAhead())
+                    StopAndTurn();
             }
         }
 
         RotateTowardsTarget();
 
         foreach (Animator anim in allTrackAnimators)
+            if (anim != null) anim.SetBool("isMoving", isMoving);
+
+       
+        if (tracksAudio != null)
         {
-            if (anim != null)
+            if (isMoving && !wasMoving)
             {
-                anim.SetBool("isMoving", isMoving);
+                tracksAudio.time = TRACKS_START;
+                tracksAudio.Play();
             }
+            else if (!isMoving && wasMoving)
+            {
+                tracksAudio.Stop();
+            }
+            if (tracksAudio.isPlaying && tracksAudio.time >= TRACKS_END)
+                tracksAudio.time = TRACKS_START;
         }
+        wasMoving = isMoving;
     }
-    
 
     void FixedUpdate()
     {
-        if (isMoving)
-        {
-            rb.linearVelocity = transform.up * moveSpeed;
-        }
-        else
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
+        if (isMoving) rb.linearVelocity = transform.up * moveSpeed;
+        else rb.linearVelocity = Vector2.zero;
     }
 
-    void StopAndTurn()
-    {
-        isMoving = false;
-        timer = 0f;
-        targetAngle = Random.Range(0f, 360f);
-    }
-
-    void PickNewDirection()
-    {
-        timer = 0f;
-        isMoving = true;
-        targetAngle = Random.Range(0f, 360f);
-    }
+    void StopAndTurn() { isMoving = false; timer = 0f; targetAngle = Random.Range(20f, 220f); }
+    void PickNewDirection() { timer = 0f; isMoving = true; targetAngle = Random.Range(20f, 220f); }
 
     void RotateTowardsTarget()
     {
@@ -117,20 +107,12 @@ public class EnemyMovement : MonoBehaviour
         float newAngle = Mathf.MoveTowardsAngle(current, targetAngle, rotationSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, 0, newAngle);
     }
-    
+
     bool IsObstacleAhead()
     {
         float radius = 0.4f;
         Vector2 origin = rb.position + (Vector2)transform.up * 0.2f;
-
-        RaycastHit2D hit = Physics2D.CircleCast(
-            origin,
-            radius,
-            transform.up,
-            obstacleCheckDistance,
-            obstacleMask
-        );
-
+        RaycastHit2D hit = Physics2D.CircleCast(origin, radius, transform.up, obstacleCheckDistance, obstacleMask);
         Debug.DrawRay(origin, transform.up * obstacleCheckDistance, Color.red);
         return hit.collider != null;
     }
@@ -139,48 +121,34 @@ public class EnemyMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("TankShell"))
         {
-            Destroy(collision.gameObject);
-
-            
-            float dmg = 0.5f;
-            if (PlayerStats.instance != null)
+            // Pouze střela hráče (layer TankShell) = layer 9
+            if (collision.gameObject.layer == LayerMask.NameToLayer("TankShell"))
             {
-                dmg = PlayerStats.instance.damage;
+                Destroy(collision.gameObject);
+                float dmg = 0.5f;
+                if (PlayerStats.instance != null) dmg = PlayerStats.instance.damage;
+                health -= dmg;
+                Debug.Log($"Enemy hit: -{dmg} HP ({health} remaining)");
+                if (healthBar != null) healthBar.SetHealth(health, maxHealth);
+                // ZVUK ZASAHU NEPRITELE
+                if (TankAudioManager.Instance != null)
+                    TankAudioManager.Instance.PlayArmorHit();
+                if (health <= 0f) Die();
             }
-
-            health -= dmg;
-            Debug.Log($"Enemy hit by shell: -{dmg} HP (remaining {health})");
-
-            if (healthBar != null)
+            else
             {
-                healthBar.SetHealth(health, maxHealth);
-            }
-
-            if (health <= 0f)
-            {
-                Die();
+                Destroy(collision.gameObject);
             }
         }
     }
 
     void Die()
     {
+        if (tracksAudio != null && tracksAudio.isPlaying) tracksAudio.Stop();
         EnemyReward reward = GetComponent<EnemyReward>();
-        if (reward != null)
-        {
-            reward.GiveReward();
-        }
-        if (LevelManager.Instance != null)
-        {
-            LevelManager.Instance.EnemyKilled();
-        }
-
-        // 3. ZNIČENÍ OBJEKTU
-        if (healthBar != null)
-        {
-            healthBar.SetHealth(0f, maxHealth);
-        }
-
+        if (reward != null) reward.GiveReward();
+        if (LevelManager.Instance != null) LevelManager.Instance.EnemyKilled();
+        if (healthBar != null) healthBar.SetHealth(0f, maxHealth);
         Destroy(gameObject);
     }
 }

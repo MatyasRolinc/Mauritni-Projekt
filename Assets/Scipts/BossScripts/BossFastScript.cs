@@ -28,10 +28,8 @@ public class BossFastScript : MonoBehaviour
         if (target == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player)
-                target = player.transform;
+            if (player) target = player.transform;
         }
-
         if (firePoint == null) firePoint = transform;
         nextFireTime = Time.time + Random.Range(0f, burstCooldown);
     }
@@ -40,19 +38,14 @@ public class BossFastScript : MonoBehaviour
     {
         if (!target) return;
 
-            Vector2 dir = (Vector2)(target.position - transform.position);
+        Vector2 dir = (Vector2)(target.position - transform.position);
+        float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + angleOffset;
+        float newAngle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, rotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
 
-            float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + angleOffset;
-
-            float newAngle = Mathf.MoveTowardsAngle(
-                transform.eulerAngles.z,
-                targetAngle,
-                rotationSpeed * Time.deltaTime
-            );
-            transform.rotation = Quaternion.Euler(0f, 0f, newAngle);
-            Vector2 origin = firePoint.position;
-            Vector2 toPlayer = (Vector2)(target.position - firePoint.position);
-            float dist = toPlayer.magnitude;
+        Vector2 origin = firePoint.position;
+        Vector2 toPlayer = (Vector2)(target.position - firePoint.position);
+        float dist = toPlayer.magnitude;
         if (dist <= 0f) return;
 
         RaycastHit2D hit = Physics2D.Raycast(origin, toPlayer.normalized, dist);
@@ -60,11 +53,7 @@ public class BossFastScript : MonoBehaviour
         {
             if (Time.time >= nextFireTime)
             {
-                if (!burstActive)
-                {
-                    burstActive = true;
-                    shotsFiredInBurst = 0;
-                }
+                if (!burstActive) { burstActive = true; shotsFiredInBurst = 0; }
 
                 if (burstActive)
                 {
@@ -73,9 +62,7 @@ public class BossFastScript : MonoBehaviour
                     shotsFiredInBurst++;
 
                     if (shotsFiredInBurst < shotsPerBurst)
-                    {
                         nextFireTime = Time.time + burstShotInterval;
-                    }
                     else
                     {
                         burstActive = false;
@@ -96,22 +83,23 @@ public class BossFastScript : MonoBehaviour
 
         Rigidbody2D rb = shell.GetComponent<Rigidbody2D>();
         shell.layer = LayerMask.NameToLayer("Enemy");
-        if (rb != null)
-            rb.linearVelocity = (Vector2)firePoint.up * shellSpeed;
+        if (rb != null) rb.linearVelocity = (Vector2)firePoint.up * shellSpeed;
 
         Destroy(shell, 8f);
+
+        // Zvuk vystrelu burst turrete
+        if (TankAudioManager.Instance != null)
+            TankAudioManager.Instance.PlayCannonFire();
     }
 
-    public void PlayFireAnimation(Transform firePoint)
+    public void PlayFireAnimation(Transform fp)
     {
         if (animator != null && !string.IsNullOrEmpty(fireTriggerName))
-        {
             animator.SetTrigger(fireTriggerName);
-        }
 
-        if (muzzleFlashPrefab != null && firePoint != null)
+        if (muzzleFlashPrefab != null && fp != null)
         {
-            GameObject fx = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
+            GameObject fx = Instantiate(muzzleFlashPrefab, fp.position, fp.rotation);
             var ps = fx.GetComponent<ParticleSystem>();
             if (ps != null) ps.Play();
             Destroy(fx, muzzleFlashDuration);

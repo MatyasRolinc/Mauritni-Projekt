@@ -244,6 +244,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1485620616}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &179685726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 179685728}
+  - component: {fileID: 179685727}
+  m_Layer: 0
+  m_Name: TankAudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &179685727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179685726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320d4c7f4b3a74e4996f5c7188b1e5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cannonFireClip: {fileID: 8300000, guid: e1466ab73cb878b40922f76573e1a041, type: 3}
+  tracksRollingClip: {fileID: 8300000, guid: d4c552c92a92dc04db111ed671623118, type: 3}
+  armorHitClip: {fileID: 8300000, guid: 6dd5766263a449a4ca6f676c92778b05, type: 3}
+  cannonVolume: 0.6
+  tracksVolume: 1
+  armorHitVolume: 1
+--- !u!4 &179685728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179685726}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &191765753
 GameObject:
   m_ObjectHideFlags: 0
@@ -2513,7 +2563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 689349909}
   - component: {fileID: 689349911}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2925,7 +2975,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1093746523}
   - component: {fileID: 1093746525}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3143,7 +3193,7 @@ Transform:
   m_GameObject: {fileID: 1216948485}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.7, y: 6.3868465, z: 0.053344958}
+  m_LocalPosition: {x: -19.6, y: -30.8, z: 0.053344958}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3841,7 +3891,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2068027359510618084, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: rewardAmount
-      value: 100
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 2797083043929770567, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: target
@@ -3901,11 +3951,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5064709996275005181, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 35.9
+      value: 24.3
       objectReference: {fileID: 0}
     - target: {fileID: 5064709996275005181, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.8
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5064709996275005181, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3937,11 +3987,11 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: a0e5c79ab403cc6418992ce098292136, type: 2}
     - target: {fileID: 8950658149672960463, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: moveSpeed
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8950658149672960463, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: obstacleMask.m_Bits
-      value: 8
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8950658149672960463, guid: ca2a251d2c5c65049bcc8f4264f14cbe, type: 3}
       propertyPath: obstacleCheckDistance
@@ -4314,7 +4364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1686575589}
   - component: {fileID: 1686575590}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4642,7 +4692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1975125302}
   - component: {fileID: 1975125304}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4845,7 +4895,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2024095334}
   - component: {fileID: 2024095335}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5173,7 +5223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2045811300}
   - component: {fileID: 2045811302}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5245,6 +5295,7 @@ BoxCollider2D:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 179685728}
   - {fileID: 1634493890}
   - {fileID: 1217036361}
   - {fileID: 1534663365}

@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 13098519}
   - component: {fileID: 13098520}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ Transform:
   m_GameObject: {fileID: 13098518}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -19.885197, y: 36.69, z: 0.9097998}
+  m_LocalPosition: {x: -19.885197, y: 31.7, z: 0.9097998}
   m_LocalScale: {x: 124.62008, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -442,7 +442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6019745873510109692, guid: 907c1c7ae946f1040b378f5f1e2ec987, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.56
+      value: 34.8
       objectReference: {fileID: 0}
     - target: {fileID: 6019745873510109692, guid: 907c1c7ae946f1040b378f5f1e2ec987, type: 3}
       propertyPath: m_LocalPosition.z
@@ -774,6 +774,56 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.99999994, y: 1}
   m_Direction: 0
+--- !u!1 &710438747
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 710438749}
+  - component: {fileID: 710438748}
+  m_Layer: 0
+  m_Name: TankAudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &710438748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710438747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320d4c7f4b3a74e4996f5c7188b1e5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cannonFireClip: {fileID: 8300000, guid: e1466ab73cb878b40922f76573e1a041, type: 3}
+  tracksRollingClip: {fileID: 8300000, guid: d4c552c92a92dc04db111ed671623118, type: 3}
+  armorHitClip: {fileID: 8300000, guid: 6dd5766263a449a4ca6f676c92778b05, type: 3}
+  cannonVolume: 0.6
+  tracksVolume: 1
+  armorHitVolume: 1
+--- !u!4 &710438749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710438747}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &783796618
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +834,7 @@ GameObject:
   m_Component:
   - component: {fileID: 783796619}
   - component: {fileID: 783796620}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -910,7 +960,7 @@ GameObject:
   m_Component:
   - component: {fileID: 993665718}
   - component: {fileID: 993665719}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -988,7 +1038,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1042276660}
   - component: {fileID: 1042276661}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2156,7 +2206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1868610349}
   - component: {fileID: 1868610350}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2313,7 +2363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2033908871}
   - component: {fileID: 2033908872}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2385,6 +2435,7 @@ BoxCollider2D:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 710438749}
   - {fileID: 1811490433}
   - {fileID: 1956159688}
   - {fileID: 636984494}

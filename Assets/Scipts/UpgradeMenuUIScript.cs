@@ -1,17 +1,18 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement; // Potřebujeme pro přepínání levelů
+using UnityEngine.SceneManagement;
 
 public class UpgradeMenuUIScript : MonoBehaviour
 {
     private PlayerStats playerStats;
+    private bool initialRefreshDone = false;
 
     [Header("UI Texty")]
     public TextMeshProUGUI hpTMP;
     public TextMeshProUGUI speedTMP;
     public TextMeshProUGUI reloadTMP;
     public TextMeshProUGUI shellSpeedTMP;
-    public TextMeshProUGUI damageTMP; // Přidáno pro damage
+    public TextMeshProUGUI damageTMP;
 
     [Header("Ceny")]
     public int healthCost = 50;
@@ -20,119 +21,113 @@ public class UpgradeMenuUIScript : MonoBehaviour
     public int shellSpeedCost = 40;
     public int damageCost = 100;
 
-    void Start() 
-    { 
+    void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Zavolá se po dokončení načtení scény – PlayerStats už existuje
+        initialRefreshDone = false;
+        Invoke(nameof(TryRefresh), 0.05f);
+    }
+
+    void Start()
+    {
+        initialRefreshDone = false;
+        Invoke(nameof(TryRefresh), 0.05f);
+    }
+
+    void Update()
+    {
+        if (!initialRefreshDone && PlayerStats.instance != null)
+        {
+            playerStats = PlayerStats.instance;
+            RefreshUI();
+            initialRefreshDone = true;
+        }
+    }
+
+    void TryRefresh()
+    {
+        if (initialRefreshDone) return;
         if (PlayerStats.instance != null)
         {
             playerStats = PlayerStats.instance;
-            Debug.Log("<color=green>UpgradeMenu: PlayerStats nalezen!</color>");
             RefreshUI();
+            initialRefreshDone = true;
         }
         else
         {
-            Debug.LogError("<color=red>UpgradeMenu: PlayerStats NENALEZEN! Spusť hru z Levelu 1!</color>");
+            // Zkusit znovu za dalších 0.1s
+            Invoke(nameof(TryRefresh), 0.1f);
         }
     }
-
-    void OnEnable()
-{
-
-    Invoke(nameof(LateRefresh), 0.1f);
-}
-
-void LateRefresh()
-{
-    RefreshUI();
-}
 
     public void RefreshUI()
-{
-    playerStats = PlayerStats.instance;
-
-    if (playerStats == null) 
     {
-        Debug.LogError("RefreshUI: Stále nemůžu najít PlayerStats.instance!");
-        return;
+        if (playerStats == null) playerStats = PlayerStats.instance;
+        if (playerStats == null) return;
+
+        if (hpTMP != null)         hpTMP.text         = playerStats.maxHealth.ToString();
+        if (speedTMP != null)      speedTMP.text      = playerStats.moveSpeed.ToString("F1");
+        if (reloadTMP != null)     reloadTMP.text     = playerStats.reloadTime.ToString("F2");
+        if (shellSpeedTMP != null) shellSpeedTMP.text = playerStats.shellSpeed.ToString("F1");
+        if (damageTMP != null)     damageTMP.text     = playerStats.damage.ToString();
+
+        playerStats.UpdateUI();
     }
 
-    Debug.Log($"Vypisuji do UI: HP={playerStats.maxHealth}, Speed={playerStats.moveSpeed}");
-
-    if (hpTMP != null) hpTMP.text = playerStats.maxHealth.ToString();
-    if (speedTMP != null) speedTMP.text = playerStats.moveSpeed.ToString("F1");
-    if (reloadTMP != null) reloadTMP.text = playerStats.reloadTime.ToString("F2");
-    if (shellSpeedTMP != null) shellSpeedTMP.text = playerStats.shellSpeed.ToString("F1");
-    if (damageTMP != null) damageTMP.text = playerStats.damage.ToString();
-
-    playerStats.UpdateUI();
-}
-
-
     public void BuyHealthUpgrade()
-    {   RefreshUI();    
-        if (CheckStats())
-        {
-            playerStats.UpgradeMaxHealth(healthCost);
-        }
+    {
+        if (CheckStats()) playerStats.UpgradeMaxHealth(healthCost);
         RefreshUI();
     }
 
     public void BuySpeedUpgrade()
-    {   RefreshUI();
-        if (CheckStats())
-        {
-            playerStats.UpgradeMoveSpeed(speedCost);
-        }
+    {
+        if (CheckStats()) playerStats.UpgradeMoveSpeed(speedCost);
         RefreshUI();
     }
 
     public void BuyReloadUpgrade()
-    {   RefreshUI();
-        {
-            playerStats.UpgradeReloadTime(reloadCost);
-        }
+    {
+        if (CheckStats()) playerStats.UpgradeReloadTime(reloadCost);
         RefreshUI();
     }
 
     public void BuyShellSpeedUpgrade()
-    {   RefreshUI();
-        if (CheckStats() && playerStats.SpendMoney(shellSpeedCost))
-        {
-            playerStats.shellSpeed += 1.0f;
-        }
+    {
+        if (CheckStats()) playerStats.UpgradeShellSpeed(shellSpeedCost);
         RefreshUI();
     }
 
     public void BuyDamageUpgrade()
     {
-        RefreshUI();
-        if (CheckStats())
-        {
-            playerStats.UpgradeDamage(damageCost);
-        }
+        if (CheckStats()) playerStats.UpgradeDamage(damageCost);
         RefreshUI();
     }
 
-    // TLAČÍTKO PRO DALŠÍ LEVEL
     public void ClickNextLevel()
     {
-        Debug.Log("Tlačítko Next Level stisknuto.");
-    if (LevelManager.Instance != null)
-    {
-        LevelManager.Instance.LoadNextLevel(); 
-    }
-    else
-    {
-        LevelManager lm = FindFirstObjectByType<LevelManager>();
-        if (lm != null)
+        if (LevelManager.Instance != null)
+            LevelManager.Instance.LoadNextLevel();
+        else
         {
-            lm.LoadNextLevel();
+            LevelManager lm = FindFirstObjectByType<LevelManager>();
+            if (lm != null) lm.LoadNextLevel();
         }
     }
-    }
-    // Pomocná metoda, aby se kód neopakoval
+
     private bool CheckStats()
     {
         if (playerStats == null) playerStats = PlayerStats.instance;
-    return playerStats != null;
+        return playerStats != null;
     }
 }

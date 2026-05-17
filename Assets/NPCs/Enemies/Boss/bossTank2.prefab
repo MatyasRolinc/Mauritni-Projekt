@@ -244,8 +244,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 674e620ad52f2bc43a7bbbac31afbed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  moveDuration: 2
+  moveSpeed: 5
+  moveDuration: 4
   stopDuration: 0.5
   rotationSpeed: 100
   health: 30
@@ -255,7 +255,7 @@ MonoBehaviour:
   - {fileID: 4133169394656018217}
   - {fileID: 708886524092195880}
   - {fileID: 5181290798964329620}
-  obstacleCheckDistance: 2
+  obstacleCheckDistance: 6
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8
